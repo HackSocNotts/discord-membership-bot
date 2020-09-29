@@ -1,0 +1,12 @@
+.vscode/
+lib/
+node_modules/
+.codeclimate
+.editorconfig
+.eslintignore
+.slintrc.js
+.prettierrc.js
+jest.config.js
+README.md
+Dockerfile
+.dockerignore

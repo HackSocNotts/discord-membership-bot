@@ -1,0 +1,22 @@
+
+# name: "Docker Build and Deploy"
+# on:
+#   release:
+#     types: [published]
+#   push:
+#     branches:
+#       - master
+#       - develop
+#     tags:
+#       - v*
+# jobs:
+#   build-deploy:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v2
+#       - uses: docker/build-push-action@v1
+#         with:
+#             username: hacksocnotts
+#             password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+#             repository: hacksoc/<REPO>
+#             tag_with_ref: true

@@ -1,0 +1,21 @@
+
+## Compiled JavaScript files
+**/*.js
+**/*.js.map
+
+# Configs
+!.eslintrc.js
+!.prettierrc.js
+!jest.config.js
+
+# Typescript v1 declaration files
+typings/
+
+node_modules/
+
+# Test Artifacts
+junit.xml
+coverage/
+
+.env
+*.log
