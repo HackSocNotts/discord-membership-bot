@@ -1,0 +1,12 @@
+type Member {
+  id: Int! @unique
+  name: String!
+  type: String!
+  joined: String!
+}
+
+type Query {
+  allMembers: [Member!]
+  memberById(id: Int!): Member
+  membersByName(name: String!): [Member]
+}
