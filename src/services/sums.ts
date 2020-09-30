@@ -1,7 +1,9 @@
-import { addMember } from '../services/members';
+import { addMemberIfChanged, getAllMembers } from '../services/members';
+import { addMember as addMemberToStore } from '../store/members';
 import fetch from 'node-fetch';
 import { JSDOM } from 'jsdom';
 import { Member } from '../types/Member';
+import store from '../store';
 
 let su_session = process.env.su_session;
 const matchCookies = /(\w*=\w*)/g;
@@ -12,8 +14,16 @@ const getCookie = (cookies: string) =>
     .filter((cookie) => cookie[0] === 'su_session' && cookie[1] !== 'deleted')
     .map((cookie) => cookie[1]);
 
-export const sync = async (): Promise<void> => {
+export const sync = async (start = false): Promise<void> => {
   try {
+    if (start) {
+      const allMembers = await getAllMembers();
+
+      for (const member of allMembers) {
+        store.dispatch(addMemberToStore(member));
+      }
+    }
+
     const body = await fetch(process.env.sumsUrl as string, {
       headers: {
         Cookie: `su_session=${su_session};`,
@@ -39,7 +49,8 @@ export const sync = async (): Promise<void> => {
       }),
     );
 
-    members.forEach((member) => addMember(member as Member));
+    members.forEach((member) => addMemberIfChanged(member as Member));
+    console.log('Found', members.length, 'members.');
   } catch (e) {
     throw e;
   }
