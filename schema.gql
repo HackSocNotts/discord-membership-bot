@@ -3,10 +3,12 @@ type Member {
   name: String!
   type: String!
   joined: String!
+  discord: String @unique
 }
 
 type Query {
   allMembers: [Member!]
   memberById(id: Int!): Member
+  memberByDiscord(discord: String!): Member
   membersByName(name: String!): [Member]
 }
