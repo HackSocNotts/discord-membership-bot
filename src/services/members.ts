@@ -158,8 +158,6 @@ export const updateMember = async (id: number, member: Partial<Member>): Promise
       }
     `;
 
-    console.log('_id: ', originalMember._id, 'data: ', { ...originalMember, ...member });
-
     const { member: newMember } = await client.request<{ member: Member }, GQLMember>(updateQuery, {
       ...{ ...originalMember, ...member },
     });

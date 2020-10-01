@@ -1,6 +1,6 @@
-import { getMemberByDiscord, getMemberById } from '../services/members';
+import { ClientUser, GuildMember } from 'discord.js';
+import { getMemberByDiscord, getMemberById, updateMember } from '../services/members';
 import client from './client';
-import { ClientUser } from 'discord.js';
 
 /**
  * Handle verification dm
@@ -44,9 +44,22 @@ client.on('message', async (message) => {
       );
       return;
     }
+
+    await updateMember(id, { discord: message.author.id });
+
+    const guild = await client.guilds.fetch(process.env.discordGuildID as string);
+    const members = await guild.members.fetch();
+    const member = members.get(message.author.id) as GuildMember;
+    await member.roles.add(process.env.discordMemberRoleID as string);
+
+    message.reply(
+      'Thanks for verifying your membership. You have been verified successfully and should see all the member channels now.',
+    );
   } catch (e) {
     message.reply(
-      'An error occurred, please try again later, or raise a ticket in <#${process.env.discordHelpChannelID as string}> for help.',
+      `An error occurred, please try again later, or raise a ticket in <#${
+        process.env.discordHelpChannelID as string
+      }> for help.`,
     );
     console.error(e);
     return;
