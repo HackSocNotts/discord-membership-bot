@@ -3,9 +3,11 @@ import { GQLMember, Member } from '../types/Member';
 import _ from 'lodash';
 import client from './db';
 import { gql } from 'graphql-request';
+import { Optional } from '../types/utils';
+import { Snowflake } from 'discord.js';
 import store from '../store';
 
-export const getMemberById = async (id: number): Promise<Member> => {
+export const getMemberById = async (id: number): Promise<Optional<Member>> => {
   const query = gql`
     query MemberQuery($id: Int!) {
       member: memberById(id: $id) {
@@ -13,6 +15,7 @@ export const getMemberById = async (id: number): Promise<Member> => {
         name
         joined
         type
+        discord
       }
     }
   `;
@@ -22,6 +25,28 @@ export const getMemberById = async (id: number): Promise<Member> => {
   const data = await client.request<{ member: Member }, { id: number }>(query, variables);
 
   return data.member;
+};
+
+export const getMemberByDiscord = async (discord: Snowflake): Promise<Optional<Member>> => {
+  try {
+    const query = gql`
+      query MemberQuery($discord: String!) {
+        member: memberByDiscord(discord: $discord) {
+          id
+          name
+          joined
+          type
+          discord
+        }
+      }
+    `;
+
+    const { member } = await client.request<{ member: Member }, { discord: string }>(query, { discord });
+
+    return member;
+  } catch (e) {
+    throw e;
+  }
 };
 
 export const getAllMembers = async (): Promise<Member[]> => {
