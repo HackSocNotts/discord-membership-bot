@@ -1,7 +1,5 @@
-// import { hello } from './index';
-
-// describe('hello', () => {
-//   it('should say hello world', () => {
-//     expect(hello('world')).toStrictEqual('hello world');
-//   });
-// });
+describe('tests should work', () => {
+  it('true should equal true', () => {
+    expect(true).toStrictEqual(true);
+  });
+});

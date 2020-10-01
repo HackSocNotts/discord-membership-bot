@@ -16,13 +16,13 @@ jobs:
           node-version: 12.x
 
       - name: Install Dependencies
-        uses: bahmutov/npm-install@v1
+        run: npm ci
 
       - name: Cache node modules
         uses: actions/cache@v1
         with:
           path: node_modules
-          key: node_modules-${{ hashFiles('yarn.lock') }}
+          key: node_modules-${{ hashFiles('package-lock.json') }}
           # loading an older version is fine here, since it will get an npm install
           restore-keys: |
             node_modules-
@@ -39,7 +39,7 @@ jobs:
         uses: actions/cache@v1
         with:
           path: node_modules
-          key: node_modules-${{ hashFiles('yarn.lock') }}
+          key: node_modules-${{ hashFiles('package-lock.json') }}
           # no restore-keys here, so we only accept this exact version
 
       - name: Compile Production Build
@@ -57,7 +57,7 @@ jobs:
         uses: actions/cache@v1
         with:
           path: node_modules
-          key: node_modules-${{ hashFiles('yarn.lock') }}
+          key: node_modules-${{ hashFiles('package-lock.json') }}
           # no restore-keys here, so we only accept this exact version
 
       - name: Run eslint
@@ -75,7 +75,7 @@ jobs:
         uses: actions/cache@v1
         with:
           path: node_modules
-          key: node_modules-${{ hashFiles('yarn.lock') }}
+          key: node_modules-${{ hashFiles('package-lock.json') }}
           # no restore-keys here, so we only accept this exact version
 
       - name: Run Jest
