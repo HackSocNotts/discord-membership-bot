@@ -1,9 +1,9 @@
+import { addMember as addMemberToStore, updateMember as updateMemberToStore } from '../store/members';
 import { GQLMember, Member } from '../types/Member';
 import _ from 'lodash';
 import client from './db';
 import { gql } from 'graphql-request';
-
-const members: { [key: number]: Member } = {};
+import store from '../store';
 
 export const getMemberById = async (id: number): Promise<Member> => {
   const query = gql`
@@ -76,19 +76,19 @@ export const addMember = async (member: Member): Promise<Member> => {
 
 export const addMemberIfChanged = async (member: Member): Promise<Member> => {
   try {
-    if (!members[member.id]) {
+    if (!store.getState().members[member.id]) {
       const savedMember = await addMember(member);
-      members[savedMember.id] = savedMember;
+      store.dispatch(addMemberToStore(savedMember));
       return savedMember;
     }
 
-    if (!_.isEqual(members[member.id], member)) {
+    if (!_.isEqual(store.getState().members[member.id], member)) {
       const savedMember = await updateMember(member.id, member);
-      members[savedMember.id] = savedMember;
+      store.dispatch(updateMemberToStore(savedMember));
       return savedMember;
     }
 
-    return members[member.id];
+    return store.getState().members[member.id];
   } catch (e) {
     throw e;
   }
