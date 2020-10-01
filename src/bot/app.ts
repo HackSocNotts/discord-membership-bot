@@ -1,6 +1,7 @@
 import './initialDm';
 import './lookup';
 import './clearUser';
+import './clearAll';
 import './verify';
 import './verifyAll';
 import client from './client';
