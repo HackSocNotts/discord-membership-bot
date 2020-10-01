@@ -5,7 +5,11 @@ import { getMemberByDiscord } from '../services/members';
 const verifyAll = (members: Collection<Snowflake, GuildMember>, message: Message) =>
   members.forEach(async (member) => {
     try {
-      if (!member.roles.cache.has(process.env.discordMemberRoleId as string) || member.user.bot) {
+      if (!member.roles.cache.has(process.env.discordMemberRoleID as string) || member.user.bot) {
+        console.log(
+          process.env.discordMemberRoleID,
+          !member.roles.cache.has(process.env.discordMemberRoleID as string),
+        );
         return;
       }
 
