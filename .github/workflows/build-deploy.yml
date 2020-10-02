@@ -19,7 +19,7 @@ jobs:
       - name: Prepare Tags
         id: prep
         run: |
-          DOCKER_IMAGE=docker.pkg.github.com/hacksocnotts/discord-membership-bot/bot
+          DOCKER_IMAGE=ghcr.io/hacksocnotts/discord-membership-bot
           VERSION=noop
           if [ "${{ github.event_name }}" = "schedule" ]; then
             VERSION=nightly
