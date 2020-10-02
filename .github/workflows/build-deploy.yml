@@ -19,7 +19,7 @@ jobs:
       - name: Prepare Tags
         id: prep
         run: |
-          DOCKER_IMAGE=hacksocnotts/discord-membership-bot/bot
+          DOCKER_IMAGE=docker.pkg.github.com/hacksocnotts/discord-membership-bot/bot
           VERSION=noop
           if [ "${{ github.event_name }}" = "schedule" ]; then
             VERSION=nightly
@@ -45,12 +45,18 @@ jobs:
           echo ::set-output name=tags::${TAGS}
           echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
 
+
+      - name: Login to GitHub Package Registry
+        uses: docker/login-action@v1
+        with:
+          registry: docker.pkg.github.com
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+
       - name: Build & Publish
         uses: docker/build-push-action@v2
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-          registry: docker.pkg.github.com
           tags: ${{ steps.prep.outputs.tags }}
           labels: |
             org.opencontainers.image.title=${{ github.event.repository.name }}
