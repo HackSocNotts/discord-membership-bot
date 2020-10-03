@@ -1,11 +1,9 @@
-import { addMember as addMemberToStore, updateMember as updateMemberToStore } from '../store/members';
 import { GQLMember, Member } from '../types/Member';
 import _ from 'lodash';
 import client from './db';
 import { gql } from 'graphql-request';
 import { Optional } from '../types/utils';
 import { Snowflake } from 'discord.js';
-import store from '../store';
 
 export const getMemberById = async (id: number): Promise<Optional<Member>> => {
   const query = gql`
@@ -70,50 +68,6 @@ export const getAllMembers = async (): Promise<Member[]> => {
     } = await client.request<{ allMembers: { members: Member[] } }>(query);
 
     return members;
-  } catch (e) {
-    throw e;
-  }
-};
-
-export const addMember = async (member: Member): Promise<Member> => {
-  try {
-    const query = gql`
-      mutation AddMemberMutation($id: Int!, $name: String!, $type: String!, $joined: String!) {
-        member: createMember(data: { id: $id, name: $name, type: $type, joined: $joined }) {
-          id
-          name
-          type
-          joined
-          discord
-        }
-      }
-    `;
-
-    const { member: savedMember } = await client.request<{ member: Member }, Member>(query, member);
-    return savedMember;
-  } catch (e) {
-    if (e.message.substr(0, 23) === 'Instance is not unique.') {
-      return member;
-    }
-    throw e;
-  }
-};
-
-export const addMemberIfChanged = async (member: Member): Promise<Member> => {
-  try {
-    if (!store.getState().members[member.id]) {
-      const savedMember = await addMember(member);
-      store.dispatch(addMemberToStore(savedMember));
-      return savedMember;
-    }
-
-    if (!_.isEqual(store.getState().members[member.id], member)) {
-      const savedMember = await updateMember(member.id, member);
-      store.dispatch(updateMemberToStore(savedMember));
-      return savedMember;
-    }
-
-    return store.getState().members[member.id];
   } catch (e) {
     throw e;
   }
