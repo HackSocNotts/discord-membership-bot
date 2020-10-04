@@ -15,17 +15,21 @@ client.on('message', async (message) => {
       (message.member as GuildMember).permissions.has(Permissions.FLAGS.MANAGE_ROLES)
     ) {
       try {
+        message.channel.startTyping();
         const member = await getMemberById(id);
 
         if (!member || !member.discord) {
+          message.channel.stopTyping();
           message.reply(`\`${id}\` has not been verified on this server.`);
           return;
         }
 
         await updateMember(member.id, { discord: null });
 
+        message.channel.stopTyping();
         await message.reply(`\`${id}\` has been cleared.`);
       } catch (e) {
+        message.channel.stopTyping();
         message.reply('An error occurred, sorry. Try again later.');
         console.error(e);
       }
@@ -46,17 +50,21 @@ client.on('message', async (message) => {
       (message.member as GuildMember).permissions.has(Permissions.FLAGS.MANAGE_ROLES)
     ) {
       try {
+        message.channel.startTyping();
         const member = await getMemberByDiscord(snowflake);
 
         if (!member || !member.id) {
+          message.channel.stopTyping();
           message.reply(`<@!${snowflake}> is not verified.`);
           return;
         }
 
         await updateMember(member.id, { discord: null });
 
+        message.channel.stopTyping();
         await message.reply(`<@!${snowflake}> has been cleared.`);
       } catch (e) {
+        message.channel.stopTyping();
         message.reply('An error occurred, sorry. Try again later.');
         console.error(e);
       }
