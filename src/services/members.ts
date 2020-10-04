@@ -1,5 +1,4 @@
 import { GQLMember, Member } from '../types/Member';
-import _ from 'lodash';
 import client from './db';
 import { gql } from 'graphql-request';
 import { Optional } from '../types/utils';
