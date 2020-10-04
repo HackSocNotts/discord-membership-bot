@@ -1,4 +1,4 @@
-import { ClientUser, Guild, GuildMember, MessageEmbed, Permissions } from 'discord.js';
+import { Guild, GuildMember, MessageEmbed, Permissions } from 'discord.js';
 import client from './client';
 import { getMemberByDiscord } from '../services/members';
 
@@ -19,14 +19,16 @@ const needsToBeVerified = async (member: GuildMember) => {
  * Verify All Users Command
  */
 client.on('message', async (message) => {
-  if (message.author.id === (client.user as ClientUser).id) {
+  if (!client.user || (client.user && message.author.id === client.user.id)) {
     return;
   }
 
   if (
     message.channel.type === 'text' &&
-    (message.member as GuildMember).permissions.has(Permissions.FLAGS.ADMINISTRATOR) &&
-    message.content === `<@!${(client.user as ClientUser).id}> who to verify`
+    message.member &&
+    message.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR) &&
+    client.user &&
+    message.content === `<@!${client.user.id}> who to verify`
   ) {
     try {
       message.channel.startTyping();

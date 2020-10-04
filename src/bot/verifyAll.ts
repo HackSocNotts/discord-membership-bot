@@ -1,4 +1,4 @@
-import { ClientUser, Collection, Guild, GuildMember, Message, Permissions, Snowflake } from 'discord.js';
+import { Collection, Guild, GuildMember, Message, Permissions, Snowflake } from 'discord.js';
 import client from './client';
 import { getMemberByDiscord } from '../services/members';
 
@@ -39,14 +39,15 @@ const verifyAll = (members: Collection<Snowflake, GuildMember>, message: Message
  * Verify All Users Command
  */
 client.on('message', async (message) => {
-  if (message.author.id === (client.user as ClientUser).id) {
+  if (!client.user || (client.user && message.author.id === client.user.id)) {
     return;
   }
 
   if (
     message.channel.type === 'text' &&
-    (message.member as GuildMember).permissions.has(Permissions.FLAGS.ADMINISTRATOR) &&
-    message.content === `<@!${(client.user as ClientUser).id}> verify all`
+    message.member &&
+    message.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR) &&
+    message.content === `<@!${client.user.id}> verify all`
   ) {
     const verificationMessage = await message.reply(
       'Are you sure you want me to verify all users? **WARNING!!! THIS WILL DM EVERY GUILD MEMBER**',

@@ -1,4 +1,4 @@
-import { ClientUser, Collection, Guild, GuildMember, Message, Permissions, Snowflake } from 'discord.js';
+import { Collection, Guild, GuildMember, Message, Permissions, Snowflake } from 'discord.js';
 import client from './client';
 import { getMemberByDiscord } from '../services/members';
 
@@ -29,14 +29,16 @@ const clearAll = (members: Collection<Snowflake, GuildMember>, message: Message)
  * Clear All Users Command
  */
 client.on('message', async (message) => {
-  if (message.author.id === (client.user as ClientUser).id) {
+  if (!client.user || (client.user && message.author.id === client.user.id)) {
     return;
   }
 
   if (
     message.channel.type === 'text' &&
-    (message.member as GuildMember).permissions.has(Permissions.FLAGS.ADMINISTRATOR) &&
-    message.content === `<@!${(client.user as ClientUser).id}> clear all unverified`
+    message.member &&
+    message.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR) &&
+    client.user &&
+    message.content === `<@!${client.user.id}> clear all unverified`
   ) {
     const verificationMessage = await message.reply(
       'Are you sure you want me to clear all unverified users? **WARNING!!! THIS ACTION IS NOT REVERSIBLE**',

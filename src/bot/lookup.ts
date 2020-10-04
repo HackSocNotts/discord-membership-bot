@@ -1,5 +1,5 @@
-import { ClientUser, GuildMember, Permissions, Snowflake } from 'discord.js';
 import { getMemberByDiscord, getMemberById } from '../services/members';
+import { Permissions, Snowflake } from 'discord.js';
 import client from './client';
 
 /**
@@ -7,12 +7,19 @@ import client from './client';
  */
 client.on('message', async (message) => {
   const commandPattern = /\<\@\![0-9]{18}\>\slookup\s([0-9]{8})/;
+
+  if (!client.user || (client.user && message.author.id === client.user.id)) {
+    return;
+  }
+
   if (commandPattern.test(message.content)) {
     const id = parseInt((message.content.match(commandPattern) as RegExpMatchArray)[1]);
 
     if (
-      message.mentions.has(client.user as ClientUser) &&
-      (message.member as GuildMember).permissions.has(Permissions.FLAGS.MANAGE_ROLES)
+      client.user &&
+      message.mentions.has(client.user) &&
+      message.member &&
+      message.member.permissions.has(Permissions.FLAGS.MANAGE_ROLES)
     ) {
       try {
         message.channel.startTyping();
@@ -41,12 +48,19 @@ client.on('message', async (message) => {
  */
 client.on('message', async (message) => {
   const commandPattern = /\<\@\![0-9]{18}\>\slookup\s\<\@\!([0-9]{18})\>/;
+
+  if (!client.user || (client.user && message.author.id === client.user.id)) {
+    return;
+  }
+
   if (commandPattern.test(message.content)) {
     const snowflake: Snowflake = (message.content.match(commandPattern) as RegExpMatchArray)[1];
 
     if (
-      message.mentions.has(client.user as ClientUser) &&
-      (message.member as GuildMember).permissions.has(Permissions.FLAGS.MANAGE_ROLES)
+      client.user &&
+      message.mentions.has(client.user) &&
+      message.member &&
+      message.member.permissions.has(Permissions.FLAGS.MANAGE_ROLES)
     ) {
       try {
         message.channel.startTyping();

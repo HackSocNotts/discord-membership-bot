@@ -1,12 +1,16 @@
-import { ClientUser, GuildMember } from 'discord.js';
 import { getMemberByDiscord, getMemberById, updateMember } from '../services/members';
 import client from './client';
+import { GuildMember } from 'discord.js';
 
 /**
  * Handle verification dm
  */
 client.on('message', async (message) => {
-  if (message.channel.type !== 'dm' || message.author.id === (client.user as ClientUser).id) {
+  if (!client.user || (client.user && message.author.id === client.user.id)) {
+    return;
+  }
+
+  if (message.channel.type !== 'dm' || message.author.id === client.user.id) {
     return;
   }
 
