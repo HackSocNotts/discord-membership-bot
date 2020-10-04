@@ -6,6 +6,7 @@ import './verify';
 import './verifyAll';
 import './toVerify';
 import './isVerified';
+import './manualVerify';
 import { beat } from '../services/heartbeat';
 import client from './client';
 import { ClientUser } from 'discord.js';
