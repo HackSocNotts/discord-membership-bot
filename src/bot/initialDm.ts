@@ -6,6 +6,9 @@ import { User } from 'discord.js';
  */
 client.on('guildMemberAdd', async (member) => {
   console.log(member.displayName, 'joined');
+  if (process.env.development) {
+    return;
+  }
 
   await member.send(
     `Hey there <@!${
