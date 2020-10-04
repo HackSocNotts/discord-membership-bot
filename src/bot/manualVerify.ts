@@ -35,11 +35,11 @@ client.on('message', async (message) => {
         return;
       }
 
-      await updateMember(id, { discord: message.author.id });
+      await updateMember(id, { discord: snowflake });
 
       const guild = await client.guilds.fetch(process.env.discordGuildID as string);
       const members = await guild.members.fetch();
-      const member = members.get(message.author.id) as GuildMember;
+      const member = members.get(snowflake) as GuildMember;
       await member.roles.add(process.env.discordMemberRoleID as string);
 
       message.channel.stopTyping();
