@@ -32,15 +32,26 @@ client.on('message', async (message) => {
       message.channel.startTyping();
       const members = await (message.guild as Guild).members.fetch();
       let embedBody = '';
+      let i = 1;
+      const embeds: MessageEmbed[] = [];
 
       for (const member of members.array()) {
-        embedBody += (await needsToBeVerified(member)) ? `\n - <@${member.id}>` : '';
-      }
+        embedBody += (await needsToBeVerified(member)) ? `\n ${i++}. <@${member.id}>` : '';
 
-      const embed = new MessageEmbed().setTitle(`Unverified members`).setDescription(embedBody);
+        if (embedBody.length >= 2000) {
+          embeds.push(
+            new MessageEmbed().setTitle(`Unverified Members - ${embeds.length + 1}`).setDescription(embedBody),
+          );
+          embedBody = '';
+        }
+      }
+      embeds.push(new MessageEmbed().setTitle(`Unverified Members - ${embeds.length + 1}`).setDescription(embedBody));
 
       message.channel.stopTyping();
-      await message.channel.send('Here are the unverified members', embed);
+      await message.reply(`Here are the unverified members - ${embeds.length} parts.`);
+      for (const embed of embeds) {
+        await message.channel.send(embed);
+      }
     } catch (e) {
       message.channel.stopTyping();
       message.channel.send(`An error occurred:\n\`\`\`json\n${JSON.stringify(e, null, 2)}\n\`\`\``);
