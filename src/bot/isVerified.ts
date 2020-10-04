@@ -36,10 +36,10 @@ client.on('message', async (message) => {
         embedBody += !!dbMember ? `\n - <@${member.id}> - ${dbMember.name} (${dbMember.id})` : '';
       }
 
-      const embed = new MessageEmbed().setTitle(`Unverified members`).setDescription(embedBody);
+      const embed = new MessageEmbed().setTitle(`Verified members`).setDescription(embedBody);
 
       message.channel.stopTyping();
-      await message.channel.send('Here are the unverified members', embed);
+      await message.channel.send('Here are the verified members', embed);
     } catch (e) {
       message.channel.stopTyping();
       message.channel.send(`An error occurred:\n\`\`\`json\n${JSON.stringify(e, null, 2)}\n\`\`\``);
