@@ -25,7 +25,7 @@ client.on('message', async (message) => {
 
         if (member && member.discord) {
           message.channel.stopTyping();
-          message.reply(`\`${id}\` has been verified by <@!${member.discord}>`);
+          message.reply(`\`${id}\` has been verified by <@!${member.discord}> as ${member.name}`);
         }
       } catch (e) {
         message.channel.stopTyping();
@@ -59,7 +59,7 @@ client.on('message', async (message) => {
 
         if (member && member.id) {
           message.channel.stopTyping();
-          message.reply(`<@!${snowflake}> has been verified as \`${member.id}\``);
+          message.reply(`<@!${snowflake}> has been verified as ${member.name} - \`${member.id}\``);
         }
       } catch (e) {
         message.channel.stopTyping();
