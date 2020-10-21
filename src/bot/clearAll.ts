@@ -5,7 +5,7 @@ import { getMemberByDiscord } from '../services/members';
 const clearAll = (members: Collection<Snowflake, GuildMember>, message: Message) =>
   members.forEach(async (member) => {
     try {
-      if (!member.roles.cache.has(process.env.discordMemberRoleId as string) || member.user.bot) {
+      if (!member.roles.cache.has(process.env.discordMemberRoleID as string) || member.user.bot) {
         return;
       }
 
